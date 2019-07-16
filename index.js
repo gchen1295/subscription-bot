@@ -4,7 +4,7 @@ const fs = require('fs')
 const https = require('https')
 require('dotenv').config();
 
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5000;
 
 app.post('/shopify', (req, res)=>{
   console.log(req.query)
@@ -19,6 +19,6 @@ app.get('/', (req, res)=>{
 https.createServer({
   key: fs.readFileSync('server.key'),
   cert: fs.readFileSync('server.cert')
-}, app).listen(PORT, ()=>{
+}, app).listen(PORT, '134.209.37.56', ()=>{
   console.log(`App listening on port ${PORT}`)
 })
