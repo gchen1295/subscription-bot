@@ -4,7 +4,7 @@ const fs = require('fs')
 const https = require('https')
 require('dotenv').config();
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 
 app.post('/shopify', (req, res)=>{
   console.log(req.query)
