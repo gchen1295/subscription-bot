@@ -6,19 +6,22 @@ require('dotenv').config();
 
 const PORT = process.env.PORT || 3000;
 
-app.post('/shopify', (req, res)=>{
+app.post('/shopify', (req, res) => {
   console.log(req.query)
   res.status(200)
   res.send("OK")
 })
 
-app.get('/', (req, res)=>{
+app.get('/', (req, res) => {
   res.send('Hello')
 })
 
-https.createServer({
-  key: fs.readFileSync('server.key'),
-  cert: fs.readFileSync('server.cert')
-}, app).listen(PORT, ()=>{
+// https.createServer({
+//   key: fs.readFileSync('server.key'),
+//   cert: fs.readFileSync('server.cert')
+// }, app).listen(PORT, ()=>{
+//   console.log(`App listening on port ${PORT}`)
+// })
+app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`)
 })
