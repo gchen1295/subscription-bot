@@ -7,7 +7,7 @@ require('dotenv').config();
 const PORT = process.env.PORT || 3000;
 
 app.post('/shopify', (req, res) => {
-  console.log(req.query)
+  console.log(req.body)
   res.status(200)
   res.send("OK")
 })
