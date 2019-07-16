@@ -19,6 +19,6 @@ app.get('/', (req, res)=>{
 https.createServer({
   key: fs.readFileSync('server.key'),
   cert: fs.readFileSync('server.cert')
-}, app).listen(PORT, '134.209.37.56', ()=>{
+}, app).listen(PORT, ()=>{
   console.log(`App listening on port ${PORT}`)
 })
