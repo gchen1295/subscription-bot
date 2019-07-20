@@ -969,7 +969,7 @@ client.on('message', async message => {
             icon_url: server.icon_url
           },
           title: "Invalid Key ❌",
-          description: "Use .checkKey to check your key"
+          description: "Use .key to check your key binded or provide a proper key"
         }
         message.author.send({
           embed: emb
