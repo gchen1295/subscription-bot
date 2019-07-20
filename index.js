@@ -880,7 +880,7 @@ client.on('message', async message => {
         key: args[1]
       })
       if (foundKey) {
-        if (foundKey.purchasedBy == null) {
+        if (foundKey.purchasedBy == null && args[2] != undefined) {
           if (args[2].includes('@')) {
             let activated = await auth.activateKey(message.author.tag, message.author.id, args[1])
             if (activated) {
