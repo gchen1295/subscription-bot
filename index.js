@@ -480,11 +480,11 @@ client.on('message', async message => {
             },
             {
               name: "Date Registered",
-              value: key.dateRegistered == null ? "Not Registered" : new Date(key.dateRegistered).toLocaleString() + 'EST'
+              value: key.dateRegistered == null ? "Not Registered" : new Date(key.dateRegistered).toLocaleString() + ' EST'
             },
             {
               name: "Date Expires",
-              value: key.dateExpires == null ? "Not active" : new Date(key.dateExpires).toLocaleString() + 'EST'
+              value: key.dateExpires == null ? "Not active" : new Date(key.dateExpires).toLocaleString() + ' EST'
             },
             {
               name: "Registered Email",
@@ -659,11 +659,11 @@ client.on('message', async message => {
             },
             {
               name: "Date Registered",
-              value: key.dateRegistered == null ? "Not Registered" : new Date(key.dateRegistered).toLocaleString() + 'EST'
+              value: key.dateRegistered == null ? "Not Registered" : new Date(key.dateRegistered).toLocaleString() +  ' EST'
             },
             {
               name: "Date Expires",
-              value: key.dateExpires == null ? "Not active" : new Date(key.dateExpires).toLocaleString() + 'EST'
+              value: key.dateExpires == null ? "Not active" : new Date(key.dateExpires).toLocaleString() + ' EST'
             },
             {
               name: "Registered Email",
@@ -757,11 +757,11 @@ client.on('message', async message => {
           },
           {
             name: "Date Registered",
-            value: new Date(key.dateRegistered).toLocaleString() + 'EST'
+            value: new Date(key.dateRegistered).toLocaleString() + ' EST'
           },
           {
             name: "Date Expires",
-            value: new Date(key.dateExpires).toLocaleString() + 'EST'
+            value: new Date(key.dateExpires).toLocaleString() + ' EST'
           }
         ]
       }
