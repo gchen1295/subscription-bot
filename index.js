@@ -179,10 +179,6 @@ app.post('/recharge/failed', async (req, res) => {
       if (user) {
         let emb = {
           color: 0xff0000,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "Problem processing payment ❌",
           description: "There was a problem processing payment for your card. Please use another payment method or contact lackingg#1010 or ~Woof~#1001"
         }
@@ -192,10 +188,6 @@ app.post('/recharge/failed', async (req, res) => {
       } else {
         let emb = {
           color: 0x00ff00,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "No registered user ❗️",
           description: `There was a problem with a failed payment notification`,
           fields: [{
@@ -219,10 +211,6 @@ app.post('/recharge/failed', async (req, res) => {
     } else {
       let emb = {
         color: 0x00ff00,
-        author: {
-          name: server.botName,
-          icon_url: server.icon_url
-        },
         title: "No registered key ❗️",
         description: `There is no key assigned for the following customer`,
         fields: [{
@@ -269,10 +257,6 @@ app.post('/recharge/failed_max', async (req, res) => {
       if (user) {
         let emb = {
           color: 0x00ff00,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "Problem processing payment ❌",
           description: "There was a problem processing payment for your card. \nYour membership will end in 2 hours.\nPlease contact lackingg#1010 or ~Woof~#1001"
         }
@@ -282,10 +266,6 @@ app.post('/recharge/failed_max', async (req, res) => {
       } else {
         let emb = {
           color: 0x00ff00,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "No registered user ❗️",
           description: `There was a problem with a failed payment notification`,
           fields: [{
@@ -309,10 +289,6 @@ app.post('/recharge/failed_max', async (req, res) => {
     } else {
       let emb = {
         color: 0x00ff00,
-        author: {
-          name: server.botName,
-          icon_url: server.icon_url
-        },
         title: "No registered key ❗️",
         description: `There is not key assigned for the following customer`,
         fields: [{
@@ -353,10 +329,6 @@ app.post('/recharge/paid', async (req, res) => {
       if (user) {
         let emb = {
           color: 0x00ff00,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "Successfully charged card! ✔️",
           description: "Your membership has been renewed. Thank you for choosing DC Supply and we look forward to another successful month with you!"
         }
@@ -367,10 +339,6 @@ app.post('/recharge/paid', async (req, res) => {
         console.log("None found")
         let emb = {
           color: 0x00ff00,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "No registered user ❗️",
           description: `There is no user registered for the following renewal`,
           fields: [{
@@ -444,11 +412,7 @@ client.on('message', async message => {
           let key = await auth.genkey(message.author.tag);
           let emb = {
             color: 0x00ff00,
-            author: {
-              name: server.botName,
-              icon_url: server.icon_url
-            },
-            title: "Key Created 🔑 ",
+            title: "Key Created ✔️",
             fields: [{
               name: "Key",
               value: key.key
@@ -534,10 +498,6 @@ client.on('message', async message => {
       } else {
         let emb = {
           color: 0xff0000,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "User or Key not found! ❌"
         }
         message.author.send({
@@ -573,10 +533,6 @@ client.on('message', async message => {
             let emb = {
               color: 0xffa500,
               title: "Key Revoked!",
-              author: {
-                name: server.botName,
-                icon_url: server.icon_url
-              },
               description: `Key for ${key.registeredUser} has been revoked`
             }
             auth.revokeKey(args[1])
@@ -592,10 +548,6 @@ client.on('message', async message => {
             let emb = {
               color: 0xffa500,
               title: "Cancelled!",
-              author: {
-                name: server.botName,
-                icon_url: server.icon_url
-              },
               description: `Cancelled revoking key for ${key.registeredUser}`
             }
             message.author.send({
@@ -608,10 +560,6 @@ client.on('message', async message => {
       } else {
         let emb = {
           color: 0xff0000,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "User or Key not found! ❌"
         }
         message.author.send({
@@ -646,10 +594,6 @@ client.on('message', async message => {
           if (s) {
             let emb = {
               color: 0x00ff00,
-              author: {
-                name: server.botName,
-                icon_url: server.icon_url
-              },
               title: `${taggeduser.user.tag}'s membership had been extend ${args[2]} days ✔️`
             }
             message.author.send({
@@ -658,10 +602,6 @@ client.on('message', async message => {
           } else {
             let emb = {
               color: 0xff0000,
-              author: {
-                name: server.botName,
-                icon_url: server.icon_url
-              },
               title: "Problem extending membership. ❌",
               description: "User ID not found"
             }
@@ -672,10 +612,6 @@ client.on('message', async message => {
         } else {
           let emb = {
             color: 0xff0000,
-            author: {
-              name: server.botName,
-              icon_url: server.icon_url
-            },
             title: "Problem extending membership. ❌",
             description: "Please provide a valid number of days"
           }
@@ -687,10 +623,6 @@ client.on('message', async message => {
       } else {
         let emb = {
           color: 0xff0000,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "User not found! ❌"
         }
         message.author.send({
@@ -745,10 +677,6 @@ client.on('message', async message => {
       } else {
         let emb = {
           color: 0xff0000,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "Email not found! ❌"
         }
         message.author.send({
@@ -818,10 +746,6 @@ client.on('message', async message => {
     if (key) {
       let emb = {
         color: 0xffa500,
-        author: {
-          name: server.botName,
-          icon_url: server.icon_url
-        },
         title: "KEY DETAILS",
         fields: [{
             name: "Key",
@@ -847,10 +771,6 @@ client.on('message', async message => {
     } else {
       let emb = {
         color: 0xff0000,
-        author: {
-          name: server.botName,
-          icon_url: server.icon_url
-        },
         title: "No key binded ❌"
       }
       message.author.send({
@@ -865,10 +785,6 @@ client.on('message', async message => {
     if (found) {
       let emb = {
         color: 0xff0000,
-        author: {
-          name: server.botName,
-          icon_url: server.icon_url
-        },
         title: "You already have a key binded ❌",
         description: "Use .key to check your key"
       }
@@ -885,10 +801,6 @@ client.on('message', async message => {
           {
             let emb = {
               color: 0xff0000,
-              author: {
-                name: server.botName,
-                icon_url: server.icon_url
-              },
               title: "Please provide email ❌",
               description: "Provide the email the purchase was made with.\n.bind <key> <email>"
             }
@@ -900,10 +812,6 @@ client.on('message', async message => {
             if (activated) {
               let emb = {
                 color: 0x00ff00,
-                author: {
-                  name: server.botName,
-                  icon_url: server.icon_url
-                },
                 title: "Key Binded ✅",
                 description: "Use .key to check your key binded or provide a proper key"
               }
@@ -916,10 +824,6 @@ client.on('message', async message => {
             } else {
               let emb = {
                 color: 0xff0000,
-                author: {
-                  name: server.botName,
-                  icon_url: server.icon_url
-                },
                 title: "Invalid Key ❌",
                 description: "Use .key to check your key binded or provide a proper key"
               }
@@ -930,10 +834,6 @@ client.on('message', async message => {
           } else {
             let emb = {
               color: 0xff0000,
-              author: {
-                name: server.botName,
-                icon_url: server.icon_url
-              },
               title: "Please provide email ❌",
               description: "Provide the email the purchase was made with.\n.bind <key> <email>"
             }
@@ -947,10 +847,6 @@ client.on('message', async message => {
           if (activated) {
             let emb = {
               color: 0x00ff00,
-              author: {
-                name: server.botName,
-                icon_url: server.icon_url
-              },
               title: "Key Binded ✔️",
               description: "Key successfully binded to account"
             }
@@ -963,10 +859,6 @@ client.on('message', async message => {
           } else {
             let emb = {
               color: 0xff0000,
-              author: {
-                name: server.botName,
-                icon_url: server.icon_url
-              },
               title: "Invalid Key ❌",
               description: "Use .key to check your key binded or provide a proper key"
             }
@@ -978,10 +870,6 @@ client.on('message', async message => {
       } else {
         let emb = {
           color: 0xff0000,
-          author: {
-            name: server.botName,
-            icon_url: server.icon_url
-          },
           title: "Invalid Key ❌",
           description: "Use .key to check your key binded or provide a proper key"
         }
@@ -1005,10 +893,6 @@ async function monitorKeys() {
         user.send({
           embed: {
             color: 0xff0000,
-            author: {
-              name: server.botName,
-              icon_url: server.icon_url
-            },
             fields: [{
               name: "Key has expired!",
               value: "Please contact Woof#1001 or lackingg#1010 to renew"
@@ -1031,10 +915,6 @@ async function monitorKeys() {
         user.send({
           embed: {
             color: 0xff0000,
-            author: {
-              name: server.botName,
-              icon_url: server.icon_url
-            },
             fields: [{
               name: "Renewal soon!",
               value: "You will be charged for renewal within the next 24 hours"
