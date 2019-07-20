@@ -70,7 +70,7 @@ async function activateKey(userTag, userID, key) {
     });
     if (found && found.registeredUserID == null) {
       found.dateRegistered = new Date()
-      found.dateExpires = +new Date() + 1 * 24 * 60 * 60 * 1000 //30 * 25 * 60 * 60 * 1000
+      found.dateExpires = +new Date() + 30 * 25 * 60 * 60 * 1000
       found.registeredUser = userTag
       found.registeredUserID = userID
       found.purchased = true
@@ -92,7 +92,7 @@ async function activateKeyEmail(userTag, userID, key, email) {
     });
     if (found && found.registeredUserID == null) {
       found.dateRegistered = new Date()
-      found.dateExpires = +new Date() + 1 * 24 * 60 * 60 * 1000 //30 * 25 * 60 * 60 * 1000
+      found.dateExpires = +new Date() + 30 * 25 * 60 * 60 * 1000
       found.registeredUser = userTag
       found.registeredUserID = userID
       found.purchasedBy = email
@@ -104,6 +104,27 @@ async function activateKeyEmail(userTag, userID, key, email) {
     }
   } catch (err) {
 
+  }
+}
+
+async function extendKey(userTag, userID, days) {
+  try {
+    console.log({userTag, userID})
+    let found = await Key.findOne({
+      registeredUser: userTag,
+      registeredUserID: userID
+    });
+    if (found) {
+      found.dateExpires = +new Date(found.dateExpires) + days * 24 * 60 * 60 * 1000
+      await found.save();
+      return true
+    } else {
+      console.log("Key not found")
+      return false
+    }
+  } catch (err) {
+    console.log(err)
+    return false
   }
 }
 
@@ -136,6 +157,8 @@ async function checkExpiringSoon() {
 
   }
 }
+
+
 
 async function revokeKey(userID) {
   try {
@@ -188,5 +211,6 @@ module.exports = {
   'deleteKey': deleteKey,
   'getKey': getKey,
   'revokeKey': revokeKey,
-  'activateKeyEmail': activateKeyEmail
+  'activateKeyEmail': activateKeyEmail,
+  'extendKey': extendKey
 }

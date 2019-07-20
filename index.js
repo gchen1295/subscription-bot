@@ -44,46 +44,51 @@ app.use(bodyParser.json());
 app.post('/shopify', async (req, res) => {
   try {
     let details = req.body
-    console.log(details.customer.email)
+    //console.log(details.customer.email)
+    let foundPurchased = await Key.findOne({
+      purchasedBy: details.customer.email
+    })
     let found = await Key.findOne({
       purchasedBy: null,
       registeredUserID: null,
       dateExpires: null
     })
-    console.log(details)
-    if (found) {
-      found.purchasedBy = details.customer.email
-      await found.save()
-      const msg = {
-        to: details.customer.email,
-        from: 'dcsply@gmail.com',
-        templateId: "d-92e2c5e09d2847ed8b11f5c7b32f72e4",
+    //console.log(details)
+    if (!foundPurchased) {
+      if (found) {
+        found.purchasedBy = details.customer.email
+        await found.save()
+        const msg = {
+          to: details.customer.email,
+          from: 'dcsply@gmail.com',
+          templateId: "d-92e2c5e09d2847ed8b11f5c7b32f72e4",
 
-        dynamic_template_data: {
-          subject: 'DCSPLY Key',
-          auth_key: found.key
-        },
-      };
-      sgMail.send(msg);
+          dynamic_template_data: {
+            subject: 'DCSPLY Key',
+            auth_key: found.key
+          },
+        };
+        sgMail.send(msg);
 
-    } else {
-      let s = await auth.createKeys(1, '~Woof~#1001 (System)')
-      let found2 = await Key.findOne({
-        key: s,
-      })
-      found2.purchasedBy = details.customer.email
-      await found2.save()
-      const msg = {
-        to: details.customer.email,
-        from: 'dcsply@gmail.com',
-        templateId: "d-92e2c5e09d2847ed8b11f5c7b32f72e4",
+      } else {
+        let s = await auth.createKeys(1, '~Woof~#1001 (System)')
+        let found2 = await Key.findOne({
+          key: s,
+        })
+        found2.purchasedBy = details.customer.email
+        await found2.save()
+        const msg = {
+          to: details.customer.email,
+          from: 'dcsply@gmail.com',
+          templateId: "d-92e2c5e09d2847ed8b11f5c7b32f72e4",
 
-        dynamic_template_data: {
-          subject: 'DCSPLY Key',
-          auth_key: key
-        },
-      };
-      sgMail.send(msg);
+          dynamic_template_data: {
+            subject: 'DCSPLY Key',
+            auth_key: key
+          },
+        };
+        sgMail.send(msg);
+      }
     }
     res.status(200)
     res.send("OK")
@@ -92,23 +97,72 @@ app.post('/shopify', async (req, res) => {
   }
 })
 
-app.post('/recharge', async (req, res) => {
-  try {
+// app.post('/recharge/sub_created', async (req, res) => {
+//   try {
+//     let details = req.body
+//     //console.log(details.customer.email)
+//     let {
+//       customer_id
+//     } = details.subscription
+//     let customer = await recharge.getCustomerByID(customer_id)
+//     console.log(customer)
+//     let email = customer.email
+//     let found = await Key.findOne({
+//       purchasedBy: null,
+//       registeredUserID: null,
+//       dateExpires: null
+//     })
+//     console.log(details)
 
-    let details = req
-    console.log(details)
-    res.status(200)
-    res.send("OK")
+//     if (found) {
+//       found.purchasedBy = email
+//       await found.save()
+//       const msg = {
+//         to: email,
+//         from: 'dcsply@gmail.com',
+//         templateId: "d-92e2c5e09d2847ed8b11f5c7b32f72e4",
 
-  } catch (err) {
-    res.status(401)
-  }
-})
+//         dynamic_template_data: {
+//           subject: 'DCSPLY Key',
+//           auth_key: found.key
+//         },
+//       };
+//       sgMail.send(msg);
+
+//     } else {
+//       let s = await auth.createKeys(1, '~Woof~#1001 (System)')
+//       let found2 = await Key.findOne({
+//         key: s,
+//       })
+//       found2.purchasedBy = email
+//       await found2.save()
+//       const msg = {
+//         to: email,
+//         from: 'dcsply@gmail.com',
+//         templateId: "d-92e2c5e09d2847ed8b11f5c7b32f72e4",
+
+//         dynamic_template_data: {
+//           subject: 'DCSPLY Key',
+//           auth_key: key
+//         },
+//       };
+//       sgMail.send(msg);
+//     }
+
+//     res.status(200)
+//     res.send("OK")
+//   } catch (err) {
+//     console.log(err)
+//     res.status(401)
+//     res.send("NOT OK")
+//   }
+// })
 
 // If failed send a message to user and cancel subscription
 app.post('/recharge/failed', async (req, res) => {
   try {
     let details = req.body
+    console.log(details)
     let {
       email,
       error_type
@@ -118,7 +172,7 @@ app.post('/recharge/failed', async (req, res) => {
       purchasedBy: email
     })
     if (found) {
-      found.dateExpires = +new Date()
+      found.dateExpires = +new Date() + 24 * 60 * 60 * 1000
       found.save()
       // Send discord message to user here
       let user = client.guilds.get(server.serverID).members.get(found.registeredUserID)
@@ -188,7 +242,9 @@ app.post('/recharge/failed', async (req, res) => {
     res.status(200)
     res.send("OK")
   } catch (err) {
-    res.status(401)
+    console.log(err)
+    res.status(400)
+    res.send("NOT OK")
   }
 })
 
@@ -276,7 +332,8 @@ app.post('/recharge/failed_max', async (req, res) => {
     res.status(200)
     res.send("OK")
   } catch (err) {
-    res.status(401)
+    res.status(400)
+    res.send("NOT OK")
   }
 })
 
@@ -342,7 +399,8 @@ app.post('/recharge/paid', async (req, res) => {
     res.send("OK")
   } catch (err) {
     console.log(err)
-    res.status(401)
+    res.status(400)
+    res.send("NOT OK")
   }
 })
 
@@ -463,6 +521,10 @@ client.on('message', async message => {
             {
               name: "Date Expires",
               value: key.dateExpires == null ? "Not active" : new Date(key.dateExpires).toLocaleString() + 'EST'
+            },
+            {
+              name: "Registered Email",
+              value: key.purchasedBy == null ? "No registered email" : key.purchasedBy
             }
           ]
         }
@@ -564,7 +626,7 @@ client.on('message', async message => {
         let keyfields = []
         for (let i in allKeys) {
           //let dateRegistered = allKeys[i].dateRegistered == null ? 'Not registered' : new Date(allKeys[i].dateRegistered).toLocaleString()
-          let dateExpires = allKeys[i].dateExpires == null ? 'Not Register' : new Date(allKeys[i].dateExpires).toString()
+          let dateExpires = allKeys[i].dateExpires == null ? 'Not Registered' : new Date(allKeys[i].dateExpires).toString()
           keyfields.push(`key: ${allKeys[i].key} | registeredUser: ${allKeys[i].registeredUser} | dateExpires: ${dateExpires}`)
         }
         let i, j, temparray, chunk = 20;
@@ -576,6 +638,124 @@ client.on('message', async message => {
       }
     }
 
+    if (cmd == 'extendKey') {
+      let taggeduser = client.guilds.get(server.serverID).members.get(args[1])
+      if (taggeduser) {
+        if (!isNaN(parseInt(args[2]))) {
+          let s = await auth.extendKey(taggeduser.user.tag, args[1], args[2])
+          if (s) {
+            let emb = {
+              color: 0x00ff00,
+              author: {
+                name: server.botName,
+                icon_url: server.icon_url
+              },
+              title: `${taggeduser.user.tag}'s membership had been extend ${args[2]} days ✔️`
+            }
+            message.author.send({
+              embed: emb
+            })
+          } else {
+            let emb = {
+              color: 0xff0000,
+              author: {
+                name: server.botName,
+                icon_url: server.icon_url
+              },
+              title: "Problem extending membership. ❌",
+              description: "User ID not found"
+            }
+            message.author.send({
+              embed: emb
+            })
+          }
+        } else {
+          let emb = {
+            color: 0xff0000,
+            author: {
+              name: server.botName,
+              icon_url: server.icon_url
+            },
+            title: "Problem extending membership. ❌",
+            description: "Please provide a valid number of days"
+          }
+          message.author.send({
+            embed: emb
+          })
+        }
+
+      } else {
+        let emb = {
+          color: 0xff0000,
+          author: {
+            name: server.botName,
+            icon_url: server.icon_url
+          },
+          title: "User not found! ❌"
+        }
+        message.author.send({
+          embed: emb
+        })
+      }
+
+    }
+
+    if (cmd == 'getEmail') {
+      let key = await await Key.findOne({
+        purchasedBy: args[1]
+      });
+      console.log(key)
+      if (key) {
+        let emb = {
+          color: 0x800080,
+          title: "KEY DETAILS",
+          fields: [{
+              name: "Key",
+              value: key.key
+            },
+            {
+              name: "Register User",
+              value: key.registeredUser == null ? "Not Registered" : key.registeredUser
+            },
+            {
+              name: "Created By",
+              value: key.createdBy
+            },
+            {
+              name: "Date Created",
+              value: new Date(key.dateCreated).toLocaleString()
+            },
+            {
+              name: "Date Registered",
+              value: key.dateRegistered == null ? "Not Registered" : new Date(key.dateRegistered).toLocaleString() + 'EST'
+            },
+            {
+              name: "Date Expires",
+              value: key.dateExpires == null ? "Not active" : new Date(key.dateExpires).toLocaleString() + 'EST'
+            },
+            {
+              name: "Registered Email",
+              value: key.purchasedBy == null ? "No registered email" : key.purchasedBy
+            }
+          ]
+        }
+        message.author.send({
+          embed: emb
+        })
+      } else {
+        let emb = {
+          color: 0xff0000,
+          author: {
+            name: server.botName,
+            icon_url: server.icon_url
+          },
+          title: "Email not found! ❌"
+        }
+        message.author.send({
+          embed: emb
+        })
+      }
+    }
     // END OF ADMIN COMMANDS
   }
   // HELP MESSAGE
@@ -588,7 +768,7 @@ client.on('message', async message => {
           value: "Shows key info"
         },
         {
-          name: "bind",
+          name: "bind <key>",
           value: "Binds key to account"
         },
         {
@@ -613,8 +793,16 @@ client.on('message', async message => {
             value: "Shows key info for specific user"
           },
           {
+            name: "getEmail  <registeredEmail>",
+            value: "Shows key info for specific email"
+          },
+          {
             name: "revokeKey  <userID>",
             value: "Revokes key for specific user"
+          },
+          {
+            name: "extendKey  <userID> <days>",
+            value: "Extends key for specific user"
           }
         ]
       }
@@ -688,7 +876,10 @@ client.on('message', async message => {
         embed: emb
       })
     } else {
-      if (found.purchasedBy == null) {
+      let foundKey = await Key.findOne({
+        key: args[1]
+      })
+      if (foundKey.purchasedBy == null) {
         if (args[2].includes('@')) {
           let activated = await auth.activateKey(message.author.tag, message.author.id, args[1])
           if (activated) {
@@ -825,18 +1016,17 @@ async function monitorKeys() {
     }
     setTimeout(() => {
       monitorKeys()
-    }, 12 * 60 * 60 * 1000) //24 * 60 * 60 * 1000)
+    }, 24 * 60 * 60 * 1000) //24 * 60 * 60 * 1000)
   } catch (err) {
     console.log(err)
     setTimeout(() => {
       monitorKeys()
-    }, 12 * 60 * 60 * 1000) //24 * 60 * 60 * 1000)
+    }, 24 * 60 * 60 * 1000) //24 * 60 * 60 * 1000)
   }
 }
 
 let productionToken = "NTc4ODI5NTA1NTQ0ODQ3MzYx.XS54hA.0slxG09SthjUoFRqyy2BTFAMEz4";
-let deploymentToken = "NTc1OTAwMDYzMDI5NjU3NjEx.XQ_kSA.L59gLt6MatqP373MaGApaxqTNtY";
-client.login(productionToken).then(() => {
+client.login(process.env.BOT_TOKEN).then(() => {
   console.log("Logged in")
   monitorKeys()
 })
