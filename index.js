@@ -437,7 +437,7 @@ client.on('message', async message => {
   // ADMIN COMMANDS
   if (admin && message.channel.type == 'dm') {
     // CREATE KEY
-    if (cmd == "createKey") {
+    if (cmd == "create") {
       let numKeys = args[1]
       if (!isNaN(numKeys)) {
         if (numKeys == 1) {
@@ -619,7 +619,7 @@ client.on('message', async message => {
         })
       }
     }
-    if (cmd == 'listKeys') {
+    if (cmd == 'list') {
       let allKeys = await Key.find({});
       console.log(allKeys)
       if (allKeys) {
@@ -638,7 +638,7 @@ client.on('message', async message => {
       }
     }
 
-    if (cmd == 'extendKey') {
+    if (cmd == 'extend') {
       let taggeduser = client.guilds.get(server.serverID).members.get(args[1])
       if (taggeduser) {
         if (!isNaN(parseInt(args[2]))) {
@@ -785,11 +785,11 @@ client.on('message', async message => {
         color: 0xffa500,
         title: "Admin Commands",
         fields: [{
-            name: "createKey <number>",
+            name: "create <number>",
             value: "Creates 0 - 100 keys"
           },
           {
-            name: "getKey <userID>",
+            name: "get <userID>",
             value: "Shows key info for specific user"
           },
           {
@@ -797,11 +797,11 @@ client.on('message', async message => {
             value: "Shows key info for specific email"
           },
           {
-            name: "revokeKey  <userID>",
+            name: "revoke  <userID>",
             value: "Revokes key for specific user"
           },
           {
-            name: "extendKey  <userID> <days>",
+            name: "extend  <userID> <days>",
             value: "Extends key for specific user"
           }
         ]
