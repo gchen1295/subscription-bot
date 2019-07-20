@@ -881,7 +881,7 @@ client.on('message', async message => {
       })
       if (foundKey) {
         if (foundKey.purchasedBy == null) {
-          if(args[2] != undefined)
+          if(args[2] == undefined)
           {
             let emb = {
               color: 0xff0000,
