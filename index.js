@@ -492,7 +492,7 @@ client.on('message', async message => {
       }
     }
     // GET KEY
-    if (cmd == 'getKey') {
+    if (cmd == 'get') {
       let key = await auth.getKey(args[1])
       if (key) {
         let emb = {
@@ -904,7 +904,7 @@ client.on('message', async message => {
                   name: server.botName,
                   icon_url: server.icon_url
                 },
-                title: "Key Binded ✔️",
+                title: "Key Binded ✅",
                 description: "Use .key to check your key binded or provide a proper key"
               }
               let user = client.guilds.get(server.serverID).members.get(message.author.id)
