@@ -496,7 +496,7 @@ client.on('message', async message => {
       let key = await auth.getKey(args[1])
       if (key) {
         let emb = {
-          color: 0x800080,
+          color: 0xffa500,
           title: "KEY DETAILS",
           fields: [{
               name: "Key",
@@ -552,7 +552,7 @@ client.on('message', async message => {
       console.log(args[1])
       if (key) {
         let e1 = {
-          color: 0x800080,
+          color: 0xffa500,
           title: "Are you sure you want to revoke this key?"
         }
         let msg1 = await message.author.send({
@@ -571,7 +571,7 @@ client.on('message', async message => {
 
           if (reaction.emoji.name === '✅') {
             let emb = {
-              color: 0x800080,
+              color: 0xffa500,
               title: "Key Revoked!",
               author: {
                 name: server.botName,
@@ -590,7 +590,7 @@ client.on('message', async message => {
             })
           } else {
             let emb = {
-              color: 0x800080,
+              color: 0xffa500,
               title: "Cancelled!",
               author: {
                 name: server.botName,
@@ -707,7 +707,7 @@ client.on('message', async message => {
       console.log(key)
       if (key) {
         let emb = {
-          color: 0x800080,
+          color: 0xffa500,
           title: "KEY DETAILS",
           fields: [{
               name: "Key",
@@ -761,7 +761,7 @@ client.on('message', async message => {
   // HELP MESSAGE
   if (cmd == "help") {
     let emb = {
-      color: 0x9932CC,
+      color: 0xffa500,
       title: "Help",
       fields: [{
           name: "key",
@@ -782,7 +782,7 @@ client.on('message', async message => {
     })
     if (admin) {
       emb = {
-        color: 0x9932CC,
+        color: 0xffa500,
         title: "Admin Commands",
         fields: [{
             name: "createKey <number>",
@@ -817,7 +817,7 @@ client.on('message', async message => {
     let key = await auth.getKey(message.author.id)
     if (key) {
       let emb = {
-        color: 0x800080,
+        color: 0xffa500,
         author: {
           name: server.botName,
           icon_url: server.icon_url
