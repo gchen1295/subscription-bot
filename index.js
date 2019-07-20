@@ -468,7 +468,7 @@ client.on('message', async message => {
             },
             {
               name: "Registered User",
-              value: key.registeredUser
+              value: client.guilds.get(server.serverID).members.get(key.registeredUserID).user.tag
             },
             {
               name: "Created By",
@@ -647,7 +647,7 @@ client.on('message', async message => {
             },
             {
               name: "Registered User",
-              value: key.registeredUser == null ? "Not Registered" : key.registeredUser
+              value: key.registeredUser == null ? "Not Registered" : client.guilds.get(server.serverID).members.get(key.registeredUserID).user.tag
             },
             {
               name: "Created By",
