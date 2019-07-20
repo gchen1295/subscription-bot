@@ -879,8 +879,56 @@ client.on('message', async message => {
       let foundKey = await Key.findOne({
         key: args[1]
       })
-      if (foundKey.purchasedBy == null) {
-        if (args[2].includes('@')) {
+      if (foundKey) {
+        if (foundKey.purchasedBy == null) {
+          if (args[2].includes('@')) {
+            let activated = await auth.activateKey(message.author.tag, message.author.id, args[1])
+            if (activated) {
+              let emb = {
+                color: 0x00ff00,
+                author: {
+                  name: server.botName,
+                  icon_url: server.icon_url
+                },
+                title: "Key Binded ✔️",
+                description: "Key successfully binded to account"
+              }
+              let user = client.guilds.get(server.serverID).members.get(message.author.id)
+              await user.addRole(server.verifiedRole)
+              //await user.removeRole(server.unverifiedRoles)
+              message.author.send({
+                embed: emb
+              })
+            } else {
+              let emb = {
+                color: 0xff0000,
+                author: {
+                  name: server.botName,
+                  icon_url: server.icon_url
+                },
+                title: "Invalid Key ❌",
+                description: "Invalid key provided!"
+              }
+              message.author.send({
+                embed: emb
+              })
+            }
+          } else {
+            let emb = {
+              color: 0xff0000,
+              author: {
+                name: server.botName,
+                icon_url: server.icon_url
+              },
+              title: "Please provide email ❌",
+              description: "Provide the email the purchase was made with.\n.bind <key> <email>"
+            }
+            message.author.send({
+              embed: emb
+            })
+          }
+
+        } else {
           let activated = await auth.activateKey(message.author.tag, message.author.id, args[1])
           if (activated) {
             let emb = {
@@ -912,53 +960,20 @@ client.on('message', async message => {
               embed: emb
             })
           }
-        } else {
-          let emb = {
-            color: 0xff0000,
-            author: {
-              name: server.botName,
-              icon_url: server.icon_url
-            },
-            title: "Please provide email ❌",
-            description: "Provide the email the purchase was made with.\n.bind <key> <email>"
-          }
-          message.author.send({
-            embed: emb
-          })
         }
-
       } else {
-        let activated = await auth.activateKey(message.author.tag, message.author.id, args[1])
-        if (activated) {
-          let emb = {
-            color: 0x00ff00,
-            author: {
-              name: server.botName,
-              icon_url: server.icon_url
-            },
-            title: "Key Binded ✔️",
-            description: "Key successfully binded to account"
-          }
-          let user = client.guilds.get(server.serverID).members.get(message.author.id)
-          await user.addRole(server.verifiedRole)
-          //await user.removeRole(server.unverifiedRoles)
-          message.author.send({
-            embed: emb
-          })
-        } else {
-          let emb = {
-            color: 0xff0000,
-            author: {
-              name: server.botName,
-              icon_url: server.icon_url
-            },
-            title: "Invalid Key ❌",
-            description: "Use .checkKey to check your key"
-          }
-          message.author.send({
-            embed: emb
-          })
+        let emb = {
+          color: 0xff0000,
+          author: {
+            name: server.botName,
+            icon_url: server.icon_url
+          },
+          title: "Invalid Key ❌",
+          description: "Use .checkKey to check your key"
         }
+        message.author.send({
+          embed: emb
+        })
       }
     }
   }
