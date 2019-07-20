@@ -503,7 +503,7 @@ client.on('message', async message => {
               value: key.key
             },
             {
-              name: "Register User",
+              name: "Registered User",
               value: key.registeredUser
             },
             {
@@ -714,7 +714,7 @@ client.on('message', async message => {
               value: key.key
             },
             {
-              name: "Register User",
+              name: "Registered User",
               value: key.registeredUser == null ? "Not Registered" : key.registeredUser
             },
             {
@@ -828,7 +828,7 @@ client.on('message', async message => {
             value: key.key
           },
           {
-            name: "Register User",
+            name: "Registered User",
             value: key.registeredUser
           },
           {
@@ -880,8 +880,22 @@ client.on('message', async message => {
         key: args[1]
       })
       if (foundKey) {
-        if (foundKey.purchasedBy == null && args[2] != undefined) {
-          if (args[2].includes('@')) {
+        if (foundKey.purchasedBy == null) {
+          if(args[2] != undefined)
+          {
+            let emb = {
+              color: 0xff0000,
+              author: {
+                name: server.botName,
+                icon_url: server.icon_url
+              },
+              title: "Please provide email ❌",
+              description: "Provide the email the purchase was made with.\n.bind <key> <email>"
+            }
+            message.author.send({
+              embed: emb
+            })
+          }else if (args[2].includes('@')) {
             let activated = await auth.activateKey(message.author.tag, message.author.id, args[1])
             if (activated) {
               let emb = {
