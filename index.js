@@ -896,7 +896,7 @@ client.on('message', async message => {
               embed: emb
             })
           }else if (args[2].includes('@')) {
-            let activated = await auth.activateKeyEmail(message.author.tag, message.author.id, args[1])
+            let activated = await auth.activateKeyEmail(message.author.tag, message.author.id, args[1], args[2])
             if (activated) {
               let emb = {
                 color: 0x00ff00,
