@@ -90,6 +90,7 @@ async function activateKeyEmail(userTag, userID, key, email) {
     let found = await Key.findOne({
       key: key
     });
+    console.log(email)
     if (found && found.registeredUserID == null) {
       found.dateRegistered = new Date()
       found.dateExpires = +new Date() + 30 * 25 * 60 * 60 * 1000
