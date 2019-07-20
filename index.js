@@ -891,7 +891,7 @@ client.on('message', async message => {
                   icon_url: server.icon_url
                 },
                 title: "Key Binded ✔️",
-                description: "Key successfully binded to account"
+                description: "Use .key to check your key binded or provide a proper key"
               }
               let user = client.guilds.get(server.serverID).members.get(message.author.id)
               await user.addRole(server.verifiedRole)
@@ -907,7 +907,7 @@ client.on('message', async message => {
                   icon_url: server.icon_url
                 },
                 title: "Invalid Key ❌",
-                description: "Invalid key provided!"
+                description: "Use .key to check your key binded or provide a proper key"
               }
               message.author.send({
                 embed: emb
@@ -954,7 +954,7 @@ client.on('message', async message => {
                 icon_url: server.icon_url
               },
               title: "Invalid Key ❌",
-              description: "Use .checkKey to check your key"
+              description: "Use .key to check your key binded or provide a proper key"
             }
             message.author.send({
               embed: emb
