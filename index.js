@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.post('/shopify', async (req, res) => {
   try {
     let details = req.body
-    //console.log(details.customer.email)
+    console.log(details.customer.email)
     let foundPurchased = await Key.findOne({
       purchasedBy: details.customer.email
     })
