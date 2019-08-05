@@ -946,7 +946,7 @@ async function monitorKeys() {
 }
 
 let productionToken = "NTc4ODI5NTA1NTQ0ODQ3MzYx.XS54hA.0slxG09SthjUoFRqyy2BTFAMEz4";
-client.login(productionToken).then(() => {
+client.login(process,env.BOT_TOKEN).then(() => {
   console.log("Logged in")
   monitorKeys()
 }).catch(err=>{
