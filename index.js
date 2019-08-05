@@ -44,7 +44,7 @@ app.use(bodyParser.json());
 app.post('/shopify', async (req, res) => {
   try {
     let details = req.body
-    console.log(details.customer.email)
+    console.log("Fullfilled order from " + details.customer.email)
     let foundPurchased = await Key.findOne({
       purchasedBy: details.customer.email
     })
@@ -56,6 +56,7 @@ app.post('/shopify', async (req, res) => {
     //console.log(details)
     if (!foundPurchased) {
       if (found) {
+        console("New customer. Sending key...")
         found.purchasedBy = details.customer.email
         await found.save()
         const msg = {
@@ -69,14 +70,16 @@ app.post('/shopify', async (req, res) => {
           },
         };
         sgMail.send(msg);
-
+        console("Key sent: " + found.key)
       } else {
+        console("New customer. Creating key...")
         let s = await auth.createKeys(1, '~Woof~#1001 (System)')
         let found2 = await Key.findOne({
           key: s,
         })
         found2.purchasedBy = details.customer.email
         await found2.save()
+        console("New customer. Creating key...")
         const msg = {
           to: details.customer.email,
           from: 'dcsply@gmail.com',
@@ -88,6 +91,7 @@ app.post('/shopify', async (req, res) => {
           },
         };
         sgMail.send(msg);
+        console("Key sent: " + key)
       }
     }
     res.status(200)
@@ -164,12 +168,12 @@ app.post('/shopify', async (req, res) => {
 app.post('/recharge/failed', async (req, res) => {
   try {
     let details = req.body
-    console.log(details)
+    console.log("Charge failed for " + details.charge.email)
     let {
       email,
       error_type
     } = details.charge
-    console.log(details)
+    //console.log(details)
     let found = await Key.findOne({
       purchasedBy: email
     })
@@ -765,6 +769,10 @@ client.on('message', async message => {
           {
             name: "Date Expires",
             value: new Date(key.dateExpires).toLocaleString() + ' EST'
+          },
+          {
+            name: "Registered Email",
+            value: key.purchasedBy == null ? "No registered email" : key.purchasedBy
           }
         ]
       }
@@ -938,7 +946,9 @@ async function monitorKeys() {
 }
 
 let productionToken = "NTc4ODI5NTA1NTQ0ODQ3MzYx.XS54hA.0slxG09SthjUoFRqyy2BTFAMEz4";
-client.login(process.env.BOT_TOKEN).then(() => {
+client.login(productionToken).then(() => {
   console.log("Logged in")
   monitorKeys()
+}).catch(err=>{
+  
 })

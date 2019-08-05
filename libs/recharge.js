@@ -188,9 +188,9 @@ async function getCustomerByHash(userHash)
   }
 }
 
-//listWebHooks()
-//deleteWebHooks(60473)
-//addWebHook('https://c2d02891.ngrok.io/recharge/failed','charge/failed')
+listWebHooks()
+//deleteWebHooks(62858)
+//addWebHook('https://6ed9adcb.ngrok.io/recharge/paid','charge/paid')
 //testWebHooks(60304)
 
 module.exports = {
