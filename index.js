@@ -460,6 +460,7 @@ client.on('message', async message => {
     // GET KEY
     if (cmd == 'get') {
       let key = await auth.getKey(args[1])
+      console.log(key)
       if (key) {
         let emb = {
           color: 0xffa500,
