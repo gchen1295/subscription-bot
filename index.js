@@ -328,7 +328,7 @@ app.post('/recharge/paid', async (req, res) => {
       purchasedBy: email
     })
     if (found) {
-      found.dateExpires = +new Date() + 30 * 25 * 60 * 60 * 1000
+      found.dateExpires = +new Date() + 31 * 24 * 60 * 60 * 1000
       found.save()
       // Send discord message to user here
       let user = client.guilds.get(server.serverID).members.get(found.registeredUserID)
@@ -551,8 +551,7 @@ client.on('message', async message => {
             message.author.send({
               embed: emb
             })
-          } else {
-            let emb = {
+            emb = {
               color: 0xffa500,
               title: "Cancelled!",
               description: `Cancelled revoking key for ${key.registeredUser}`
@@ -598,14 +597,79 @@ client.on('message', async message => {
       if (taggeduser) {
         if (!isNaN(parseInt(args[2]))) {
           let s = await auth.extendKey(taggeduser.user.tag, args[1], args[2])
+          let emb = {
+            color: 0x00ff00,
+            title: `${taggeduser.user.tag}'s membership had been extend ${args[2]} days ✔️`
+          }
+          message.author.send({
+            embed: emb
+          })
           if (s) {
-            let emb = {
-              color: 0x00ff00,
-              title: `${taggeduser.user.tag}'s membership had been extend ${args[2]} days ✔️`
+            let exdate = +new Date(s.dateExpires) + args[2] * 24 * 60 * 60 * 1000
+            exdate = new Date(exdate).toLocaleDateString()
+            exdate = exdate.split("/")
+            exdate = exdate[2] + '-' + exdate[0] + '-' + exdate[1]
+
+            let customer = await recharge.getCustomerByEmail(s.purchasedBy)
+            if (customer) {
+              let s = await recharge.findSubscription(customer.id)
+              if (s) {
+                let subs = s.subscriptions
+                let activeSub
+                for (let i in subs) {
+                  if (subs[i].status == 'ACTIVE') {
+                    activeSub = subs[i]
+                    break
+                  }
+                }
+                if (activeSub != undefined) {
+                  let done = await recharge.updateSubscription(activeSub.id, exdate)
+                  if(done)
+                  {
+                    let emb = {
+                      color: 0x00ff00,
+                      title: `${taggeduser.user.tag}'s subscription had been updated ✔️`
+                    }
+                    message.author.send({
+                      embed: emb
+                    })
+                  }
+                }
+                else {
+                  let emb = {
+                    color: 0xff0000,
+                    title: "Problem updating subscription. ❌",
+                    description: `No active subscriptions`
+                  }
+                  message.author.send({
+                    embed: emb
+                  })
+                }
+              } else {
+                let emb = {
+                  color: 0xff0000,
+                  title: "Problem updating subscription. ❌",
+                  description: `No active subscriptions`
+                }
+                message.author.send({
+                  embed: emb
+                })
+              }
+            } else {
+              let emb = {
+                color: 0xff0000,
+                title: "Problem updating subscription. ❌",
+                description: `Customer not found`,
+                fields: [{
+                  name: "Email",
+                  value: s.purchasedBy == null ? "No email" : s.purchasedBy
+                }]
+              }
+              message.author.send({
+                embed: emb
+              })
             }
-            message.author.send({
-              embed: emb
-            })
+
           } else {
             let emb = {
               color: 0xff0000,
@@ -666,7 +730,7 @@ client.on('message', async message => {
             },
             {
               name: "Date Registered",
-              value: key.dateRegistered == null ? "Not Registered" : new Date(key.dateRegistered).toLocaleString() +  ' EST'
+              value: key.dateRegistered == null ? "Not Registered" : new Date(key.dateRegistered).toLocaleString() + ' EST'
             },
             {
               name: "Date Expires",
@@ -808,8 +872,7 @@ client.on('message', async message => {
       })
       if (foundKey) {
         if (foundKey.purchasedBy == null) {
-          if(args[2] == undefined)
-          {
+          if (args[2] == undefined) {
             let emb = {
               color: 0xff0000,
               title: "Please provide email ❌",
@@ -818,7 +881,7 @@ client.on('message', async message => {
             message.author.send({
               embed: emb
             })
-          }else if (args[2].includes('@')) {
+          } else if (args[2].includes('@')) {
             let activated = await auth.activateKeyEmail(message.author.tag, message.author.id, args[1], args[2])
             if (activated) {
               let emb = {
@@ -949,6 +1012,6 @@ let productionToken = "NTc4ODI5NTA1NTQ0ODQ3MzYx.XS54hA.0slxG09SthjUoFRqyy2BTFAME
 client.login(process.env.BOT_TOKEN).then(() => {
   console.log("Logged in")
   monitorKeys()
-}).catch(err=>{
-  
+}).catch(err => {
+
 })

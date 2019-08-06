@@ -110,7 +110,7 @@ async function activateKeyEmail(userTag, userID, key, email) {
 
 async function extendKey(userTag, userID, days) {
   try {
-    console.log({userTag, userID})
+    //console.log({userTag, userID})
     let found = await Key.findOne({
       registeredUser: userTag,
       registeredUserID: userID
@@ -118,7 +118,7 @@ async function extendKey(userTag, userID, days) {
     if (found) {
       found.dateExpires = +new Date(found.dateExpires) + days * 24 * 60 * 60 * 1000
       await found.save();
-      return true
+      return found
     } else {
       console.log("Key not found")
       return false
@@ -187,12 +187,35 @@ async function deleteKey(key) {
   }
 }
 
+async function checkDate(userTag, userID) {
+  try {
+    console.log({userTag, userID})
+    let found = await Key.findOne({
+      registeredUser: userTag,
+      registeredUserID: userID
+    });
+    if (found) {
+      let ex = +new Date(found.dateExpires)  + 30 * 24 * 60 * 60 * 1000
+      ex = new Date(ex).toLocaleDateString()
+      ex = ex.split("/")
+      ex = ex[2] + '-' + ex[0] + '-' + ex[1]
+      return ex
+    } else {
+      console.log("Key not found")
+      return false
+    }
+  } catch (err) {
+    console.log(err)
+    return false
+  }
+}
+
 async function test() {
   try {
     mongoose.connect(`mongodb://${server}/${database}`, {
       useNewUrlParser: true
     })
-    let expired = await activateKey("Woof#12334232", "00064564dasdas5645", "qAzAvhDgo/7rfXe0tokX")
+    let expired = await checkDate("~Woof~#1001", "163541234793709568")
     console.log(expired)
     //await deleteKey(expired[0].key)
     mongoose.disconnect()
